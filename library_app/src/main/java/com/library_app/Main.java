@@ -117,14 +117,14 @@ public class Main {
 
       //..........................Testing delete old book ...........................
 
-      Book existing_book = books.get("To Kill a Mockingbird");
-      Book deleted_book = admin1.deleteBook(existing_book);
-      if (deleted_book !=null){
+    //   Book existing_book = books.get("To Kill a Mockingbird");
+    //   Book deleted_book = admin1.deleteBook(existing_book);
+    //   if (deleted_book !=null){
 
-          System.out.println("deleted book_id: "+ deleted_book.getId() + " book title: "+ deleted_book.getTitle());
-        }else{
-            System.out.println("book deleted is null.");
-        }
+    //       System.out.println("deleted book_id: "+ deleted_book.getId() + " book title: "+ deleted_book.getTitle());
+    //     }else{
+    //         System.out.println("book deleted is null.");
+    //     }
         
         print_all_Maps();
 
