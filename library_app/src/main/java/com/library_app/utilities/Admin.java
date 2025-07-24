@@ -56,7 +56,7 @@ public class Admin extends User{
         super(admin_name, admin_email, admin_password);
     }
 
-    
+    // not used yet 
     public int search_admin(String name,  String email, String password) throws SQLException {
 
         try{
@@ -106,46 +106,52 @@ public class Admin extends User{
     public void add_new_Admin(Admin admin) throws SQLException{
        
         try {
-            String name = admin.getName();
-            String email = admin.getEmail();
-            String password = admin.getPassword();
+            if (admin == null){
+                 System.out.println("Admin passed to add_new_Admin method is null");
+                 return;
+            }
 
-            conn = Database.getConnection();
-            String query = "INSERT INTO admins(admin_name, admin_email, admin_password) VALUES (?,?,?);";
-            PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, name);
-            st.setString(2, email);
-            st.setString(3, password);
-            conn.setAutoCommit(false);
-            st.executeUpdate();
-
-            conn.commit();
-            conn.setAutoCommit(true);
-
-            Main.admins.put(admin.getName(), admin);
+                String name = admin.getName();
+                String email = admin.getEmail();
+                String password = admin.getPassword();
+                
+                conn = Database.getConnection();
+                String query = "INSERT INTO admins(admin_name, admin_email, admin_password) VALUES (?,?,?);";
+                PreparedStatement st = conn.prepareStatement(query);
+                st.setString(1, name);
+                st.setString(2, email);
+                st.setString(3, password);
+                conn.setAutoCommit(false);
+                st.executeUpdate();
+                
+                conn.commit();
+                conn.setAutoCommit(true);
+                
+                Main.admins.put(admin.getName(), admin);
+                
+                
+                
+                try {
+                    int id = getLastAdminId();
+                    admin.setId(id);
+                } catch (SQLException e) {
+                    System.out.println("Error while getting the last admin id from database.");
+                    conn.rollback();
+                    conn.commit();
+                    conn.setAutoCommit(true);
+                    throw e;
+                    
+                    
+                }
+                
           
-           
-
-            try {
-            int id = getLastAdminId();
-            admin.setId(id);
-            } catch (SQLException e) {
-            System.out.println("Error while getting the last admin id from database.");
-            conn.rollback();
-            conn.commit();
-            conn.setAutoCommit(true);
-            throw e;
-            
-          
-        }
-
-        } catch( SQLException e){
-            System.out.println("Connection to Database failed in add_NewAdmin method in Admin.\n" + e);
-            conn.commit();
-            conn.setAutoCommit(true);
-            throw e;
-           
-        }
+            } catch( SQLException e){
+                System.out.println("Connection to Database failed in add_NewAdmin method in Admin.\n" + e);
+                conn.commit();
+                conn.setAutoCommit(true);
+                throw e;
+                
+            }
             
       
 
@@ -155,6 +161,11 @@ public class Admin extends User{
 
     public void add_new_Books(List<Book> books){
         try{
+
+            if (books.isEmpty() || books == null){
+                System.out.println("List of books passed to add_new_Books method is empty or null.");
+                return;
+            }
             conn = Database.getConnection();
             for (Book book : books) {
                 String title = book.getTitle();
@@ -203,7 +214,11 @@ public class Admin extends User{
 
     public void editBook(Book book, String type, String data){
         try {
-            if (book != null){
+            if (book == null || type == null || data == null)
+            {
+                System.out.println("Parameters(book, type, data) was passed incorectly in editBook method where one of them is null.");
+                return;
+            }
 
                 conn = Database.getConnection();
                 int book_id = book.getId();
@@ -248,10 +263,6 @@ public class Admin extends User{
                     
                 } 
                 
-            }
-            else{
-                System.out.println("Book sent is null. Book mentioned did not exist in Map.");
-            }
             }catch (Exception e) {
                 e.printStackTrace();
             System.out.println("Connection to database failed in editBook method in Admin.\n");
@@ -262,6 +273,11 @@ public class Admin extends User{
 
     public void editBook(Book book, int copies){
         try {
+            if (book == null)
+            {
+                System.out.println("Book passed to editBook method is null.");
+                return;
+            }
             conn = Database.getConnection();
             int book_id = book.getId();
             String query = "UPDATE books SET copies = ? WHERE book_id = ?;";
@@ -284,8 +300,27 @@ public class Admin extends User{
 
     public Book deleteBook(Book book){
 
+        try {
+            if (book == null)
+            {
+                System.out.println("Book passed to deleteBook method is null.");
+                return null;
+            }
+            conn = Database.getConnection();
+            String query = "DELETE FROM `books` WHERE book_id = ?;";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, book.getId());
+            st.executeUpdate();
 
-        return book;
+            Main.books.remove(book.getTitle());
+            System.out.println("Book with title: "+ book.getTitle() + " and book_id: "+ book.getId() +" is deleted  successfully.");
+
+    
+        } catch (SQLException e){
+            System.out.println("Error while connecting to database in deleteBook method in Admin");
+
+        }
+            return book;
     }
 
     public void registerUsers(List<User> users){

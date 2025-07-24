@@ -93,27 +93,38 @@ public class Main {
         
         //..........................Testing edit old book ...........................
         
-        // testing duplicate change.
-        Book existing_book = books.get("Test new book in between");
-        admin1.editBook(existing_book, "title", "test1");
+        // // testing duplicate change.
+        // Book existing_book = books.get("Test new book in between");
+        // admin1.editBook(existing_book, "title", "test1");
 
-        // testing changing title
-        Book existing_book2 = books.get("Test new book");
-        admin1.editBook(existing_book2, "title", "Test new book 1");
+        // // testing changing title
+        // Book existing_book2 = books.get("Test new book");
+        // admin1.editBook(existing_book2, "title", "Test new book 1");
         
-        //testing changing genre
-        Book existing_book3 = books.get("A Brief History of Time");
-        admin1.editBook(existing_book3, "genre", "History");
+        // //testing changing genre
+        // Book existing_book3 = books.get("A Brief History of Time");
+        // admin1.editBook(existing_book3, "genre", "History");
         
 
-        // testing changing author
-        Book existing_book4 = books.get("Effective Java");
-        admin1.editBook(existing_book4, "author", "nick");
+        // // testing changing author
+        // Book existing_book4 = books.get("Effective Java");
+        // admin1.editBook(existing_book4, "author", "nick");
 
-        //testing changing copies 
-        Book existing_book5 = books.get("programming");
-        admin1.editBook(existing_book5, 10);
+        // //testing changing copies 
+        // Book existing_book5 = books.get("programming");
+        // admin1.editBook(existing_book5, 10);
 
+
+      //..........................Testing delete old book ...........................
+
+      Book existing_book = books.get("To Kill a Mockingbird");
+      Book deleted_book = admin1.deleteBook(existing_book);
+      if (deleted_book !=null){
+
+          System.out.println("deleted book_id: "+ deleted_book.getId() + " book title: "+ deleted_book.getTitle());
+        }else{
+            System.out.println("book deleted is null.");
+        }
         
         print_all_Maps();
 
