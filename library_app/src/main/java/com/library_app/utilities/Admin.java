@@ -85,23 +85,23 @@ public class Admin extends User{
         }
     }
 
-    public int getLastAdminId() throws SQLException{
+    // public int getLastAdminId() throws SQLException{
 
-            try {
+    //         try {
                 
-                conn = Database.getConnection();
-                String query = "SELECT * FROM admins ORDER BY admin_id DESC LIMIT 1;" ;
-                PreparedStatement st = conn.prepareStatement(query);
-                ResultSet rs = st.executeQuery();
-                rs.next(); // move cursor down one row to the firts row. 
-                int admin_id = rs.getInt("admin_id");
-                return admin_id;
+    //             conn = Database.getConnection();
+    //             String query = "SELECT * FROM admins ORDER BY admin_id DESC LIMIT 1;" ;
+    //             PreparedStatement st = conn.prepareStatement(query);
+    //             ResultSet rs = st.executeQuery();
+    //             rs.next(); // move cursor down one row to the firts row. 
+    //             int admin_id = rs.getInt("admin_id");
+    //             return admin_id;
                 
-            } catch (SQLException e) {
-               System.out.println("Connection to database failed in getLastAdminId method in Admin.\n");
-               throw e;
-            }
-    }
+    //         } catch (SQLException e) {
+    //            System.out.println("Connection to database failed in getLastAdminId method in Admin.\n");
+    //            throw e;
+    //         }
+    // }
 
     public void add_new_Admin(Admin admin) throws SQLException{
        
@@ -124,25 +124,26 @@ public class Admin extends User{
                 conn.setAutoCommit(false);
                 st.executeUpdate();
                 
-                conn.commit();
-                conn.setAutoCommit(true);
+              
+                try {
+                    // int id = getLastAdminId();
+                    // admin.setId(id);
+                    this.updateId(admin);
+                    conn.commit();
+                    conn.setAutoCommit(true);
                 
                 Main.admins.put(admin.getName(), admin);
                 
-                
-                
-                try {
-                    int id = getLastAdminId();
-                    admin.setId(id);
                 } catch (SQLException e) {
-                    System.out.println("Error while getting the last admin id from database.");
+                    System.out.println("Error while updating admin id from database.");
                     conn.rollback();
                     conn.commit();
                     conn.setAutoCommit(true);
                     throw e;
                     
-                    
                 }
+                
+              
                 
           
             } catch( SQLException e){
@@ -324,8 +325,71 @@ public class Admin extends User{
     }
 
     public void registerUsers(List<User> users){
-
         
+         try{
+
+            if (users.isEmpty() || users == null){
+                System.out.println("List of users passed to registerUsers method is empty or null.");
+                return;
+            }
+            conn = Database.getConnection();
+            for (User user : users) {
+                String name = user.getName();
+                String email =  user.getEmail();
+                String password = user.getPassword();
+                String query = "INSERT INTO users (user_name, user_email, user_password) VALUES (?,?,?);";
+                conn.setAutoCommit(false);
+                try { // purpose of this try catch is to allow insertion of other books even if error occured with one of the books.
+                PreparedStatement st = conn.prepareStatement(query);
+                st.setString(1,name);
+                st.setString(2,email);
+                st.setString(3,password);
+                st.executeUpdate(); // can throw error
+                int id =  user.updateId(); // can throw error
+                    user.setId(id);
+                    System.out.println("User added with name: "+name +" and Email: "+email);
+                    conn.commit();
+                    conn.setAutoCommit(true);
+
+                    Main.users.put(name, user);
+              
+                } catch (Exception e){
+                    System.out.println("Error while adding user: "+ name + " to the database. "+ e);
+                    conn.rollback();
+                    conn.commit();
+                    conn.setAutoCommit(true);
+                }
+
+               
+              
+               
+
+                
+            }
+            conn.setAutoCommit(true); // just to make sure
+        } catch (SQLException e){
+            e.printStackTrace();
+            System.out.println("Connection to database failed in Admin addbooks method.\n");
+        }
+      
+    }
+
+   public int updateId(Admin admin) throws SQLException {
+
+            conn = Database.getConnection();
+            String query = "SELECT * FROM  `admins` WHERE admin_name = ? AND admin_email = ? AND admin_password = ?;";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, admin.getName());
+            st.setString(2, admin.getEmail());
+            st.setString(3, admin.getPassword());
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                int admin_id = rs.getInt("admin_id");
+                admin.setId(admin_id);
+                return admin_id;
+            }
+        System.out.println("No admin with the following data is present in the database.");
+        throw new  SQLException();
     }
 
 

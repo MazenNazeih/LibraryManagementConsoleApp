@@ -13,9 +13,9 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 public class Main {
 
-    public static   Map<String, Book> books =  new HashMap<>();
-    public static   Map<String, User> users = new HashMap<>();
-    public static   Map<String, Admin> admins = new HashMap<>();
+    public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in title
+    public static   Map<String, User> users = new HashMap<>(); // users must be unique in names
+    public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in names
 
     public static   Set<String> genres;
 

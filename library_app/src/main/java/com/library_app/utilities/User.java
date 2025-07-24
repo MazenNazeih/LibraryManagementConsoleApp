@@ -1,9 +1,13 @@
 package com.library_app.utilities;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public abstract class User {
     private int id;
     private String name;
     private String email;
@@ -32,6 +36,7 @@ public class User {
         
         return id; 
     }
+
 
 
     public String getName() {
