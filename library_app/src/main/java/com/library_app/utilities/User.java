@@ -29,6 +29,7 @@ public class User {
     }
     
     public int getId() {
+        
         return id; 
     }
 
@@ -42,6 +43,9 @@ public class User {
         return this.email;
     }
 
+    public String getPassword(){
+        return this.password;
+    }
 
 
 

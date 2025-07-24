@@ -6,9 +6,9 @@ public class RegularUser extends User implements Borrowable{
     
 
 // borrowed books here are the borrowed books of this specific user
-    public RegularUser (String name, String email, String password){
-     super(name, email, password);
-       
+    public RegularUser (int user_id, String name, String email, String password){
+        super(name, email, password);
+        super.setId(user_id);
     }
 
     // public Book viewBookCatalog(){

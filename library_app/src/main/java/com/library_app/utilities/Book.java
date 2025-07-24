@@ -14,12 +14,21 @@ public class Book {
     private Connection conn;
 
     
-    public Book(String title, String author, String genre, int availableCopies) {
+    // public Book(String title, String author, String genre, int availableCopies) {
+    //     this.title = title;
+    //     this.author = author;
+    //     this.genre = genre;
+    //     this.availableCopies = availableCopies;
+    // }
+
+    public Book(int id, String title, String author, String genre, int availableCopies) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.availableCopies = availableCopies;
     }
+
 
     protected int updateId()  throws SQLException {
 
