@@ -103,7 +103,7 @@ public class Admin extends User{
             }
     }
 
-    public void add_NewAdmin(Admin admin) throws SQLException{
+    public void add_new_Admin(Admin admin) throws SQLException{
        
         try {
             String name = admin.getName();
@@ -174,21 +174,25 @@ public class Admin extends User{
                 int id =  book.updateId(); // can throw error
                     book.setId(id);
                     System.out.println("Book added with title: "+title +" and Author: "+author +" Genre: "+ genre + " copies: "+copies);
-              
-              
+                    conn.commit();
+                    conn.setAutoCommit(true);
 
+                    Main.books.put(title, book);
+              
                 } catch (Exception e){
                     System.out.println("Error while adding book: "+ title + " to the database. "+ e);
                     conn.rollback();
+                    conn.commit();
+                    conn.setAutoCommit(true);
                 }
 
                
-                conn.commit();
+              
                
 
                 
             }
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(true); // just to make sure
         } catch (SQLException e){
             e.printStackTrace();
             System.out.println("Connection to database failed in Admin addbooks method.\n");

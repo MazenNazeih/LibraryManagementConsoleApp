@@ -21,6 +21,7 @@ public class Book {
     //     this.availableCopies = availableCopies;
     // }
 
+    // Constructor used in loading from database.
     public Book(int id, String title, String author, String genre, int availableCopies) {
         this.id = id;
         this.title = title;
@@ -28,6 +29,17 @@ public class Book {
         this.genre = genre;
         this.availableCopies = availableCopies;
     }
+
+    // constructor for creating a normal book with no id yet as id is created in the database.
+    public Book( String title, String author, String genre, int availableCopies) {
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.availableCopies = availableCopies;
+    }
+
+
+
 
 
     protected int updateId()  throws SQLException {
