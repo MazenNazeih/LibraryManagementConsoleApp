@@ -57,21 +57,28 @@ public class Main {
         
 
         loadDatabase();
-        // print_all_Maps();
+        print_all_Maps();
 
-        Admin new_admin = new Admin("test new admin", "test@gmail.com", "test1234");
+        Admin new_admin = new Admin("test4 new_admin", "test4@gmail.com", "test1234");
         // need admin to add a new admin.
         Admin admin1 = admins.get("mazen1");
+
+        //..........................Testing add new admin ...........................
         try {
             admin1.add_NewAdmin(new_admin);
             System.out.println("New admin added sucesfully.");
             System.out.println("admin details added: ");
+            
             System.out.println("admin id = "+ new_admin.getId() + " admin_name = "+ new_admin.getName() + " admin_email = "+ new_admin.getEmail());
             
         } catch (Exception e) {
              e.printStackTrace();
             System.out.println("Failed adding new admin.");
         }
+
+
+        print_all_Maps();
+
 
 
 
@@ -172,4 +179,6 @@ public class Main {
         }
 
     }
+
+
 }

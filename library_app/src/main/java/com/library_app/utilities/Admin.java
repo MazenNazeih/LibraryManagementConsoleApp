@@ -7,6 +7,8 @@ import java.sql.SQLException;
 
 import java.util.List;
 
+import com.library_app.Main;
+
 
 public class Admin extends User{
 
@@ -116,6 +118,11 @@ public class Admin extends User{
             st.setString(3, password);
             conn.setAutoCommit(false);
             st.executeUpdate();
+
+            conn.commit();
+            conn.setAutoCommit(true);
+
+            Main.admins.put(admin.getName(), admin);
           
            
 
