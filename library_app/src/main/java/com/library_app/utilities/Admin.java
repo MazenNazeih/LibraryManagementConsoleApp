@@ -203,43 +203,57 @@ public class Admin extends User{
 
     public void editBook(Book book, String type, String data){
         try {
-            
-            conn = Database.getConnection();
-            int book_id = book.getId();
-            String query;
-            PreparedStatement st;
-            type.toUpperCase();
-            switch(type){
-                case "TITLE":
+            if (book != null){
+
+                conn = Database.getConnection();
+                int book_id = book.getId();
+                String query;
+                PreparedStatement st;
+                type = type.toUpperCase();
+                switch(type){
+                    case "TITLE":
                     query = "UPDATE books SET  title = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
                     st.setInt(2, book_id);
                     st.executeUpdate();
+                    
+                    book.setTitle(data);
+                    System.out.println("Title of the book changed succesfully.");
                     break;
-
-                case "AUTHOR":
+                    
+                    case "AUTHOR":
                     query = "UPDATE books SET  author = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
                     st.setInt(2, book_id);
                     st.executeUpdate();
+                    book.setAuthor(data);
+                    System.out.println("Author of the book changed succesfully.");
                     break; 
-
-                case "GENRE":
+                    
+                    case "GENRE":
                     query = "UPDATE books SET  genre = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
                     st.setInt(2, book_id);
                     st.executeUpdate();
+                    book.setGenre(data);
+                    System.out.println("Genre of the book changed succesfully.");
                     break;
-
-
+                    
+                    default:
+                    System.out.println("Error in identifying the type of data you want to edit in the book.");
+                    throw new Exception();
+                    
+                } 
                 
-            } 
-            
-        }catch (Exception e) {
-            e.printStackTrace();
+            }
+            else{
+                System.out.println("Book sent is null. Book mentioned did not exist in Map.");
+            }
+            }catch (Exception e) {
+                e.printStackTrace();
             System.out.println("Connection to database failed in editBook method in Admin.\n");
             }
                 
@@ -255,6 +269,9 @@ public class Admin extends User{
             st.setInt(1, copies);
             st.setInt(2, book_id);
             st.executeUpdate();
+            book.setAvailableCopies(copies);
+
+            System.out.println("Available copies of the book changed successfully.");
 
         } catch (Exception e) {
             e.printStackTrace();

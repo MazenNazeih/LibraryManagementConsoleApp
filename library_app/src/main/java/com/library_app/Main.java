@@ -79,20 +79,43 @@ public class Main {
 
         //..........................Testing add new book ...........................
 
-        Book existing_book = books.get("programming");
-        List<Book> new_books = new ArrayList<>();
+        // Book existing_book = books.get("programming");
+        // List<Book> new_books = new ArrayList<>();
         
-        Book newbook1 = new Book("Test new book3", "test author 3", "test genre 3", 5);
-        Book newbook2 = new Book("Test new book4", "test author 4", "test genre 4", 3);
-        new_books.add(existing_book);
-        new_books.add(newbook1);
-        new_books.add(newbook2);
-        admin1.add_new_Books(new_books);
+        // Book newbook1 = new Book("Test new book3", "test author 3", "test genre 3", 5);
+        // Book newbook2 = new Book("Test new book4", "test author 4", "test genre 4", 3);
+        // new_books.add(existing_book);
+        // new_books.add(newbook1);
+        // new_books.add(newbook2);
+        // admin1.add_new_Books(new_books);
 
+        
+        
+        //..........................Testing edit old book ...........................
+        
+        // testing duplicate change.
+        Book existing_book = books.get("Test new book in between");
+        admin1.editBook(existing_book, "title", "test1");
+
+        // testing changing title
+        Book existing_book2 = books.get("Test new book");
+        admin1.editBook(existing_book2, "title", "Test new book 1");
+        
+        //testing changing genre
+        Book existing_book3 = books.get("A Brief History of Time");
+        admin1.editBook(existing_book3, "genre", "History");
+        
+
+        // testing changing author
+        Book existing_book4 = books.get("Effective Java");
+        admin1.editBook(existing_book4, "author", "nick");
+
+        //testing changing copies 
+        Book existing_book5 = books.get("programming");
+        admin1.editBook(existing_book5, 10);
+
+        
         print_all_Maps();
-
-
-
 
 
         System.out.println("Hello world!");
