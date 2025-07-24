@@ -128,7 +128,7 @@ public class Admin extends User{
                 try {
                     // int id = getLastAdminId();
                     // admin.setId(id);
-                    this.updateId(admin);
+                    admin.updateId();
                     conn.commit();
                     conn.setAutoCommit(true);
                 
@@ -374,18 +374,18 @@ public class Admin extends User{
       
     }
 
-   public int updateId(Admin admin) throws SQLException {
+   public int updateId() throws SQLException {
 
             conn = Database.getConnection();
             String query = "SELECT * FROM  `admins` WHERE admin_name = ? AND admin_email = ? AND admin_password = ?;";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, admin.getName());
-            st.setString(2, admin.getEmail());
-            st.setString(3, admin.getPassword());
+            st.setString(1, this.getName());
+            st.setString(2, this.getEmail());
+            st.setString(3, this.getPassword());
             ResultSet rs = st.executeQuery();
             if(rs.next()){
                 int admin_id = rs.getInt("admin_id");
-                admin.setId(admin_id);
+                this.setId(admin_id);
                 return admin_id;
             }
         System.out.println("No admin with the following data is present in the database.");

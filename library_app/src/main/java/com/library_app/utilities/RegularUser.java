@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RegularUser extends User implements Borrowable{
-    
+
     private static Connection conn;
 
 // borrowed books here are the borrowed books of this specific user
@@ -19,7 +19,6 @@ public class RegularUser extends User implements Borrowable{
 
     // }
 
-    @Override
     public int updateId() throws SQLException {
 
             conn = Database.getConnection();
