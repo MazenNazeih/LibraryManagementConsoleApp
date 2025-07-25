@@ -14,7 +14,7 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 public class Main {
 
     public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in title
-    public static   Map<String, RegularUser> users = new HashMap<>(); // users must be unique in names
+    public static   Map<String, User> users = new HashMap<>(); // users must be unique in names
     public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in names
 
     public static   Set<String> genres;
@@ -133,11 +133,11 @@ public class Main {
 
     //..........................Testing registerUser ...........................
 
-        // RegularUser new_user = new RegularUser("test_user", "test_user@gmail.com", "test1234");
-        // RegularUser new_user2 = new RegularUser("test_user2", "test_user2@gmail.com", "test1234");
-        // RegularUser new_user3 = new RegularUser("test_user3", "test_user3@gmail.com", "test1234");
+        // RegularUser new_user = new RegularUser("test_user7", "test_user7@gmail.com", "test1234");
+        // RegularUser new_user2 = new RegularUser("test_user5", "test_user5@gmail.com", "test1234");
+        // RegularUser new_user3 = new RegularUser("test_user8", "test_user8@gmail.com", "test1234");
 
-        //  List<RegularUser> new_users = new ArrayList<RegularUser>();
+        //  List<User> new_users = new ArrayList<User>();
         //  new_users.add(new_user);
         //  new_users.add(new_user2);
         //  new_users.add(new_user3);
@@ -146,6 +146,17 @@ public class Main {
         //     System.out.println("user1 id: "+ new_user.getId());
         //     System.out.println("user2 id: "+ new_user2.getId());
         //     System.out.println("user3 id: "+ new_user3.getId());
+
+
+        // ..........................Testing deleteUser ...........................
+        // User user_to_delete = users.get("test_user2");
+        // User deleted_user = admin1.deleteUser(user_to_delete);
+        // if (deleted_user !=null){
+        //     System.out.println("deleted user_id: "+ deleted_user.getId() + "user name: "+ deleted_user.getName() + " user email: "+ deleted_user.getEmail());
+        // }else{
+        //     System.out.println("user deleted is null.");
+        // }
+
 
         print_all_Maps();
 

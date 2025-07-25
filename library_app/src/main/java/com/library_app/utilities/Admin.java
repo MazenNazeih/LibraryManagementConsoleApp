@@ -325,7 +325,7 @@ public class Admin extends User{
             return book;
     }
 
-    public void registerUsers(List<RegularUser> users){
+    public void registerUsers(List<User> users){
         if (users.isEmpty() || users == null){
                 System.out.println("List of users passed to registerUsers method is empty or null.");
                 return;
@@ -334,7 +334,7 @@ public class Admin extends User{
          try{
 
             conn = Database.getConnection();
-            for (RegularUser user : users) {
+            for (User user : users) {
                 String name = user.getName();
                 String email =  user.getEmail();
                 String password = user.getPassword();
@@ -377,6 +377,34 @@ public class Admin extends User{
         }
       
     }
+
+
+    public User deleteUser(User user){
+          if (user == null)
+            {
+                System.out.println("user passed to deleteUser method is null.");
+                return null;
+            }
+          try {
+          
+            conn = Database.getConnection();
+            String query = "DELETE FROM `users` WHERE user_id = ?;";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, user.getId());
+            st.executeUpdate();
+
+            Main.users.remove(user.getName());
+            System.out.println("User with id: "+ user.getId() + " and user_name: "+ user.getName() +" is deleted  successfully.");
+
+    
+        } catch (SQLException e){
+            System.out.println("Error while connecting to database in deleteBook method in Admin");
+
+        }
+            return user;
+    }
+    
+
 
    public void  updateId() throws SQLException {
 
