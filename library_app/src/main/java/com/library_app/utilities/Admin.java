@@ -325,7 +325,7 @@ public class Admin extends User{
             return book;
     }
 
-    public void registerUsers(List<User> users){
+    public void registerUsers(List<RegularUser> users){
         if (users.isEmpty() || users == null){
                 System.out.println("List of users passed to registerUsers method is empty or null.");
                 return;
@@ -334,7 +334,7 @@ public class Admin extends User{
          try{
 
             conn = Database.getConnection();
-            for (User user : users) {
+            for (RegularUser user : users) {
                 String name = user.getName();
                 String email =  user.getEmail();
                 String password = user.getPassword();
@@ -342,19 +342,25 @@ public class Admin extends User{
                 conn.setAutoCommit(false);
 
                 try { // purpose of this try catch is to allow insertion of other users even if error occured with one of the users.
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 st.setString(1,name);
                 st.setString(2,email);
                 st.setString(3,password);
                 st.executeUpdate(); // can throw error
-
-                user.updateId(); // can throw error
+                ResultSet generated_keys = st.getGeneratedKeys();
+                if(generated_keys.next()){
+                    int user_id = generated_keys.getInt(1);
+                    user.setId(user_id);
+                } else{
+                    System.out.println("Couldnt get the user_id from the generated keys in registerUsers method.");
+                    throw new SQLException();
+                }
                     
                     conn.commit();
                     conn.setAutoCommit(true);
 
                     Main.users.put(name, user);
-                    System.out.println("User added with name: "+name +" and Email: "+email);
+                    System.out.println("User added with name: "+user.getName() +" and Email: "+user.getEmail() + "user_id: "+user.getId());
               
                 } catch (Exception e){
                     System.out.println("Error while adding user: "+ name + " to the database. "+ e);

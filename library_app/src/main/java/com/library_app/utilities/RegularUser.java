@@ -10,9 +10,16 @@ public class RegularUser extends User implements Borrowable{
     private static Connection conn;
 
 // borrowed books here are the borrowed books of this specific user
+
+    // constructor used in loading from database.
     public RegularUser (int user_id, String name, String email, String password){
         super(name, email, password);
         super.setId(user_id);
+    }
+
+    //constructor for creating a normal user with no id yet as id is created in the database.
+    public RegularUser(String name, String email, String password) {
+        super(name, email, password);
     }
 
     // public Book viewBookCatalog(){

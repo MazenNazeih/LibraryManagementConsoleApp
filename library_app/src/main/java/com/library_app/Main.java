@@ -14,7 +14,7 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 public class Main {
 
     public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in title
-    public static   Map<String, User> users = new HashMap<>(); // users must be unique in names
+    public static   Map<String, RegularUser> users = new HashMap<>(); // users must be unique in names
     public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in names
 
     public static   Set<String> genres;
@@ -130,11 +130,27 @@ public class Main {
     //     }else{
     //         System.out.println("book deleted is null.");
     //     }
-        
-    //     print_all_Maps();
+
+    //..........................Testing registerUser ...........................
+
+        // RegularUser new_user = new RegularUser("test_user", "test_user@gmail.com", "test1234");
+        // RegularUser new_user2 = new RegularUser("test_user2", "test_user2@gmail.com", "test1234");
+        // RegularUser new_user3 = new RegularUser("test_user3", "test_user3@gmail.com", "test1234");
+
+        //  List<RegularUser> new_users = new ArrayList<RegularUser>();
+        //  new_users.add(new_user);
+        //  new_users.add(new_user2);
+        //  new_users.add(new_user3);
+        //     admin1.registerUsers(new_users);
+            
+        //     System.out.println("user1 id: "+ new_user.getId());
+        //     System.out.println("user2 id: "+ new_user2.getId());
+        //     System.out.println("user3 id: "+ new_user3.getId());
+
+        print_all_Maps();
 
 
-    //     System.out.println("Hello world!");
+        System.out.println("Hello world!");
 
 
 
