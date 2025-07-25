@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.library_app.utilities.*;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
@@ -16,8 +17,9 @@ public class Main {
     public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in id
     public static   Map<String, User> users = new HashMap<>(); // users must be unique in id
     public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in id
+    public static   Set<String>        genres = new TreeSet<String>();
 
-    public static   Set<String> genres;
+
 
 
     public static void main(String[] args) {
@@ -175,8 +177,54 @@ public class Main {
         //     System.out.println("ERROR WHILE BORROWING A BOOK ");
         // }
        
+
+
+        // ..........................Testing Searching service ...........................
+        SearchService<Book> bookSearchService = new SearchService<Book>(books.values().stream().toList());
+        Book book_by_name = bookSearchService.search_by_name("programming");
+        if (book_by_name != null){
+            System.out.println("Book found by name: "+ book_by_name.getTitle() + " with id: "+ book_by_name.getId());
+        }else{
+            System.out.println("Book not found by name.");
+        }
+        Book book_by_id = bookSearchService.search_by_id("40");
+        if (book_by_id != null){
+            System.out.println("Book found by id: "+ book_by_id.getTitle() + " with id: "+ book_by_id.getId());
+        }else{
+            System.out.println("Book not found by id.");
+        }
+
+        SearchService<User> userSearchService = new SearchService<User>(users.values().stream().toList());
+        User user_by_name = userSearchService.search_by_name("test_user7");
+        if (user_by_name != null){
+            System.out.println("User found by name: "+ user_by_name.getName() + " with id: "+ user_by_name.getId());
+        }else{
+            System.out.println("User not found by name.");
+        }
+        User user_by_id = userSearchService.search_by_id("3");
+        if (user_by_id != null){
+            System.out.println("User found by id: "+ user_by_id.getName() + " with id: "+ user_by_id.getId());
+        }else{
+            System.out.println("User not found by id.");
+        }
+
+        SearchService<Admin> adminSearchService = new SearchService<Admin>(admins.values().stream().toList());
+        Admin admin_by_name = adminSearchService.search_by_name("karim");
+        if (admin_by_name != null){
+            System.out.println("Admin found by name: "+ admin_by_name.getName() + " with id: "+ admin_by_name.getId());
+        }else{
+            System.out.println("Admin not found by name."); 
+        }
+        Admin admin_by_id = adminSearchService.search_by_id("12");
+        if (admin_by_id != null){
+            System.out.println("Admin found by id: "+ admin_by_id.getName() + " with id: "+ admin_by_id.getId());
+        }else{
+            System.out.println("Admin not found by id.");
+        }
+
         System.out.println("");
-        print_all_Maps();
+        // print_all_Maps();
+        print_all_genres();
 
 
         System.out.println("Hello world!");
@@ -250,6 +298,18 @@ public class Main {
             }
             System.out.println("All books are loaded to the system successfully.");
 
+            System.out.println("Loading all genres from the database........");
+            query = "SELECT DISTINCT genre FROM `books`;";
+            st = conn.prepareStatement(query);
+            rs = st.executeQuery();
+            while(rs.next()){
+                String temp_genre = rs.getString("genre");
+                genres.add(temp_genre);
+
+            }
+            System.out.println("All genres are loaded to the system successfully.");
+
+
 
             // System.out.println("Loading all borrowed books from the database........");
             // query = "SELECT * FROM `borrowed_books`;";
@@ -293,6 +353,14 @@ public class Main {
 
     }
 
+    public static void print_all_genres(){
+        System.out.println("\n\nPrinting all books:");
+        for (String genre : genres) {
+
+            System.out.println(genre);
+        }
+        System.out.println("\n");
+    }
 
 // THINGS TO DO:
 // 1- MAKE ID STRING AND MAKE IT THE KEY FOR EVERY MAP 

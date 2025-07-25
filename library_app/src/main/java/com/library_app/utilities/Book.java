@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class Book {
+public class Book  implements Searchable{
     private String id;
     private String title;
     private String author;
@@ -37,6 +37,10 @@ public class Book {
         this.author = author;
         this.genre = genre;
         this.availableCopies = availableCopies;
+    }
+
+    public Book(){
+
     }
 
 
@@ -72,6 +76,10 @@ public class Book {
     public String getTitle() {
         return title;
     }
+
+     public String getName(){
+        return this.getTitle();
+     }
 
   
     public void setTitle(String title) {

@@ -103,7 +103,10 @@ public class RegularUser extends User implements Borrowable{
         }
         try{
             List<Book> borrowedBooks = this.getBorrowedBooks();
-            if (borrowedBooks.contains(bookID)){
+            Book temp = new Book();
+            temp.setId(bookID);
+
+            if (borrowedBooks.contains(temp)){
 
                 System.out.println("Book is already borrowed. Cannot borrow the same book twice.");
                 return;
@@ -124,9 +127,9 @@ public class RegularUser extends User implements Borrowable{
                 else{
                     // things to update: copies in book object, books table, borrowed books table, borrowed books list
                     copies -=1;
-                    book.setAvailableCopies(copies);
-                    updateDatabase(book);
-                    System.out.println("Book with title: "+ book.getTitle() + " and id: "+ book.getId() + " has been borrowed successfully.");
+                    // book.setAvailableCopies(copies);
+                    // updateDatabase(book);
+                    // System.out.println("Book with title: "+ book.getTitle() + " and id: "+ book.getId() + " has been borrowed successfully.");
                     
                 }
             }
@@ -152,16 +155,16 @@ public class RegularUser extends User implements Borrowable{
             // updating the borrowed books table
             String query = "INSERT INTO `borrowed_books` (user_id, book_id) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setInt(1, this.getId());
-            st.setInt(2, book.getId());
+            // st.setInt(1, this.getId());
+            // st.setInt(2, book.getId());
             st.executeUpdate();
 
               // updating the books table.
             query = "UPDATE `books` SET copies = ? WHERE book_id = ?;";
             st = conn.prepareStatement(query);
-            st.setInt(1, book.getAvailableCopies());
-            st.setInt(2, book.getId());
-            st.executeUpdate();
+            // st.setInt(1, book.getAvailableCopies());
+            // st.setInt(2, book.getId());
+            // st.executeUpdate();
 
             System.out.println("Database updated to apply borrowing of book_id: "+book.getId() + " by user_id: "+ this.getId());
 
