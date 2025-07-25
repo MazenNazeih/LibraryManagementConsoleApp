@@ -133,6 +133,8 @@ public class RegularUser extends User implements Borrowable{
                     copies -=1;
                     updateDatabase(bookID, copies);
                     this.update_BorrowedBooks();
+                    // decrementing available copies of the book in books map. 
+                    Main.books.get(bookID).setAvailableCopies(copies);
                     System.out.println("Book with id: "+ bookID+ " has been borrowed successfully by user id: "+ this.getId());
                     
                 }
