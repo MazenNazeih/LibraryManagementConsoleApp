@@ -26,14 +26,21 @@ public class RegularUser extends User implements Borrowable{
         super(name, email, password);
     }
 
-    public List<Book> viewBookCatalog(){
+    public void viewBookCatalog(){
         try{
             List<Book> books = this.getBorrowedBooks();
-            return books;
+            System.out.println("\nView Borrowed Books Catalog for user_id: "+this.getId() + " :");
+            for (Book book : books) {
+                System.out.println("Book id:  "+book.getId());
+                System.out.println("Book name: "+ book.getName());
+                System.out.println("Book available copies: "+ book.getAvailableCopies());
+                System.out.println("\n\n");
+            }
+           
 
         }catch (SQLException e){
             System.out.println("Error while fetching the updated borrowed books list from the database. Error in viewBookCatalog method.");
-            return null;
+     
         }
 
     }
@@ -99,15 +106,12 @@ public class RegularUser extends User implements Borrowable{
 
     @Override
     public void borrowBook(String bookID) {
-        if (bookID == null){
-            System.out.println("Book passed is null");
+        if (bookID == null || bookID.isEmpty()){
+            System.out.println("Book id passed is null or empty.");
             return;
         }
         try{
             List<Book> borrowedBooks = this.getBorrowedBooks();
-            Book temp = new Book();
-            temp.setId(bookID);
-
             SearchService<Book> book_SearchService = new SearchService<Book>(borrowedBooks);
 
             if (book_SearchService.search_by_id(bookID) != null){
@@ -131,7 +135,7 @@ public class RegularUser extends User implements Borrowable{
                 else{
                     // things to update: books table, borrowed books table, borrowed books list
                     copies -=1;
-                    updateDatabase(bookID, copies);
+                    updateDatabase_for_borrowBook(bookID, copies);
                     this.update_BorrowedBooks();
                     // decrementing available copies of the book in books map. 
                     Main.books.get(bookID).setAvailableCopies(copies);
@@ -152,7 +156,7 @@ public class RegularUser extends User implements Borrowable{
 
     }
 
-    public void  updateDatabase(String  bookId, int copies) throws SQLException{
+    public void  updateDatabase_for_borrowBook(String  bookId, int copies) throws SQLException{
         try{
             conn = Database.getConnection();
 
@@ -180,9 +184,81 @@ public class RegularUser extends User implements Borrowable{
         }
     }
 
-    public void returnBook(String bookId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'returnBook'");
+    public void  updateDatabase_for_returnBook(String  bookId, int copies) throws SQLException{
+        try{
+            conn = Database.getConnection();
+
+          
+
+            // updating the borrowed books table
+            String query = "DELETE from `borrowed_books` WHERE user_id = ? AND  book_id = ? ;";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, this.getId());
+            st.setString(2, bookId);
+            st.executeUpdate();
+
+              // updating the books table.
+            query = "UPDATE `books` SET copies = ? WHERE book_id = ?;";
+            st = conn.prepareStatement(query);
+            st.setInt(1, copies);
+            st.setString(2, bookId);
+            st.executeUpdate();
+
+            System.out.println("Database updated to apply returning of book_id: "+bookId+ " by user_id: "+ this.getId());
+
+        } catch (SQLException e){
+            System.out.println("Error in updating the database tables for returning a book.");
+            throw e;
+        }
+    }
+
+    
+    
+    @Override
+    public void returnBook(String bookID) {
+        
+          if (bookID == null || bookID.isEmpty()){
+            System.out.println("Book id passed is null or empty string.");
+            return;
+        }
+        try{
+            List<Book> borrowedBooks = this.getBorrowedBooks();
+            SearchService<Book> book_SearchService = new SearchService<Book>(borrowedBooks);
+
+            if (book_SearchService.search_by_id(bookID) == null){
+
+                System.out.println("Book is not found between borrowed books list in user with user_id: "+ this.getId());
+                return;
+        
+            }
+       
+            conn = Database.getConnection();
+            String query = "SELECT * FROM `books` WHERE book_id = ?;";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, bookID);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                int copies = rs.getInt("copies");
+                    // things to update: books table, borrowed books table, borrowed books list
+                    copies +=1;
+                    updateDatabase_for_returnBook(bookID, copies);
+                    this.update_BorrowedBooks();
+                    // incrementing available copies of the book in books map. 
+                    Main.books.get(bookID).setAvailableCopies(copies);
+                    System.out.println("Book with id: "+ bookID+ " has been returned successfully by user id: "+ this.getId());
+                    
+               
+            }
+            else{
+                System.out.println("Book id passed cannot be found in the database.");
+                return;
+            }
+
+        } catch (SQLException e){
+            System.out.println("Error in returnBook method in regular user.");
+            e.printStackTrace();
+       
+        }
     }
 
    

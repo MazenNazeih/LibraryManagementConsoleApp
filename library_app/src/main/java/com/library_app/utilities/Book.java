@@ -39,10 +39,6 @@ public class Book  implements Searchable{
         this.availableCopies = availableCopies;
     }
 
-    public Book(){
-
-    }
-
 
 
 

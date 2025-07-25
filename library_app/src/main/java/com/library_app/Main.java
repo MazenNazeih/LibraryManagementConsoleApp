@@ -161,10 +161,10 @@ public class Main {
 
 
         // ..........................Testing borrowBook ...........................
-        // RegularUser user1 = (RegularUser) users.get("2");
+        // RegularUser user1 = (RegularUser) users.get("3");
         // user1.borrowBook("28");
-        // user1.borrowBook("2");
-        // user1.borrowBook("2");
+        // user1.borrowBook("5");
+        // user1.borrowBook("5");
 
        
         
@@ -179,6 +179,21 @@ public class Main {
         //     System.out.println("ERROR WHILE BORROWING A BOOK ");
         // }
        
+        // ..........................Testing borrowBook ...........................
+        // RegularUser user1 = (RegularUser) users.get("1");
+        // user1.returnBook("40"); //to return fr
+        // user1.returnBook("3"); // to return an unborrowed book
+        // user1.returnBook("50"); // to return non existing book
+        // user1.returnBook(""); // to return a null book id
+
+          // ..........................Testing borrowBook ...........................
+        // RegularUser user1 = (RegularUser) users.get("1");
+        // user1.viewBookCatalog();
+
+        // user1.returnBook("5");
+        // user1.returnBook("6");
+
+        //  user1.viewBookCatalog();
 
 
         // ..........................Testing Searching service ...........................
