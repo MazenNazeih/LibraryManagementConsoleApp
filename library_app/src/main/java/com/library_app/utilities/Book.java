@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Book {
-    private int id;
+    private String id;
     private String title;
     private String author;
     private String genre;
@@ -22,7 +23,7 @@ public class Book {
     // }
 
     // Constructor used in loading from database.
-    public Book(int id, String title, String author, String genre, int availableCopies) {
+    public Book(String id, String title, String author, String genre, int availableCopies) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -53,18 +54,18 @@ public class Book {
             ResultSet rs = st.executeQuery();
             if(rs.next()){
                 int book_id = rs.getInt("book_id");
-                this.setId(book_id);
+                this.setId(Integer.toString(book_id));
 
             }
         System.out.println("No book with the following data is present in the database.");
         throw new  SQLException();
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
-    protected void setId(int id){
+    protected void setId(String id){
         this.id  = id;
     }
 

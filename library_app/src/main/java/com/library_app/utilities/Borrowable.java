@@ -3,6 +3,6 @@ package com.library_app.utilities;
 public interface Borrowable {
 
     
-    void borrowBook(Book book);
+    void borrowBook(String bookId);
     void returnBook(String bookId);
 }

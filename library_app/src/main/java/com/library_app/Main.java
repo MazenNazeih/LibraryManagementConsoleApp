@@ -13,9 +13,9 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 public class Main {
 
-    public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in title
-    public static   Map<String, User> users = new HashMap<>(); // users must be unique in names
-    public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in names
+    public static   Map<String, Book> books =  new HashMap<>(); // book must be unique in id
+    public static   Map<String, User> users = new HashMap<>(); // users must be unique in id
+    public static   Map<String, Admin> admins = new HashMap<>(); // admins must be unique in id
 
     public static   Set<String> genres;
 
@@ -61,10 +61,10 @@ public class Main {
 
       
         // need admin to add a new admin.
-        Admin admin1 = admins.get("mazen1");
+        Admin admin1 = admins.get("1");
 
         // ..........................Testing add new admin ...........................
-        //   Admin new_admin = new Admin("test7 new_admin", "test7@gmail.com", "test1234");
+        //   Admin new_admin = new Admin("test8 new_admin", "test8_duplicate@gmail.com", "test1234");
         // try {
         //     admin1.add_new_Admin(new_admin);
         //     System.out.println("New admin added sucesfully.");
@@ -79,11 +79,11 @@ public class Main {
 
         //..........................Testing add new book ...........................
 
-        // Book existing_book = books.get("programming");
+        // Book existing_book = books.get("1");
         // List<Book> new_books = new ArrayList<>();
         
         // Book newbook1 = new Book("Test new book7", "test author 7", "test genre 7", 5);
-        // Book newbook2 = new Book("Test new book8", "test author 8", "test genre 8", 3);
+        // Book newbook2 = new Book("Test new book9", "test author9  duplicate", "test genre 9", 3);
         
         // new_books.add(newbook1);
         // new_books.add(existing_book);
@@ -99,30 +99,30 @@ public class Main {
         //..........................Testing edit old book ...........................
         
         // // testing duplicate change.
-        // Book existing_book = books.get("Test new book in between");
-        // admin1.editBook(existing_book, "title", "test1");
+        // Book existing_book = books.get("27");
+        // admin1.editBook(existing_book, "title", "Test new book-1");
 
         // // testing changing title
         // Book existing_book2 = books.get("Test new book 1");
-        // admin1.editBook(existing_book2, "title", "Test new book1");
+        // admin1.editBook(existing_book2, "title", "Test new book-1");
         
         // //testing changing genre
-        // Book existing_book3 = books.get("A Brief History of Time");
-        // admin1.editBook(existing_book3, "genre", "Science");
+        // Book existing_book3 = books.get("4");
+        // admin1.editBook(existing_book3, "genre", "History");
         
 
         // // testing changing author
-        // Book existing_book4 = books.get("Effective Java");
-        // admin1.editBook(existing_book4, "author", "rickford");
+        // Book existing_book4 = books.get("2");
+        // admin1.editBook(existing_book4, "author", "rick");
 
         // //testing changing copies 
-        // Book existing_book5 = books.get("programming");
-        // admin1.editBook(existing_book5, 5);
+        // Book existing_book5 = books.get("1");
+        // admin1.editBook(existing_book5, 10);
 
 
       //..........................Testing delete old book ...........................
 
-    //   Book existing_book = books.get("test1");
+    //   Book existing_book = books.get("43");
     //   Book deleted_book = admin1.deleteBook(existing_book);
     //   if (deleted_book !=null){
 
@@ -149,7 +149,7 @@ public class Main {
 
 
         // ..........................Testing deleteUser ...........................
-        // User user_to_delete = users.get("test_user2");
+        // User user_to_delete = users.get("4");
         // User deleted_user = admin1.deleteUser(user_to_delete);
         // if (deleted_user !=null){
         //     System.out.println("deleted user_id: "+ deleted_user.getId() + "user name: "+ deleted_user.getName() + " user email: "+ deleted_user.getEmail());
@@ -159,10 +159,23 @@ public class Main {
 
 
         // ..........................Testing borrowBook ...........................
-        RegularUser user1 = (RegularUser) users.get("Mazen Nazeih");
-        Book book_to_borrow = books.get("Test new book 2");
-        user1.borrowBook(book_to_borrow);
-        System.out.println("User: "+ user1.getName() + " borrowed book with title: "+ book_to_borrow.getTitle() + " and id: "+ book_to_borrow.getId() + " and available copies: "+ book_to_borrow.getAvailableCopies());
+        // RegularUser user1 = (RegularUser) users.get("Mazen Nazeih");
+        // Book book_to_borrow = books.get("Clean Architecture");
+        // user1.borrowBook(book_to_borrow);
+        // System.out.println("User: "+ user1.getName() + " borrowed book with title: "+ book_to_borrow.getTitle() + " and id: "+ book_to_borrow.getId() + " and available copies: "+ book_to_borrow.getAvailableCopies());
+        
+        // try{
+        // List<Book> borrowed_books = user1.getBorrowedBooks();
+        // System.out.println("printing all borrowed books of user from the list:");
+        // for (Book book : borrowed_books) {
+        //     System.out.println("borrowed book with Book_id: "+book.getId());
+            
+        // }
+        // } catch(SQLException e){
+        //     System.out.println("ERROR WHILE BORROWING A BOOK ");
+        // }
+       
+        System.out.println("");
         print_all_Maps();
 
 
@@ -199,8 +212,8 @@ public class Main {
                 String admin_name = rs.getString("admin_name");
                 String admin_email = rs.getString("admin_email");
                 String admin_password= rs.getString("admin_password");
-                Admin admin = new Admin(admin_id, admin_name, admin_email, admin_password);
-                admins.put(admin_name, admin);
+                Admin admin = new Admin(Integer.toString(admin_id), admin_name, admin_email, admin_password);
+                admins.put(Integer.toString(admin_id), admin);
 
             }
             System.out.println("All admins are loaded to the system successfully.");
@@ -215,8 +228,8 @@ public class Main {
                 String user_name = rs.getString("user_name");
                 String user_email = rs.getString("user_email");
                 String user_password= rs.getString("user_password");
-                RegularUser user = new RegularUser(user_id,user_name, user_email, user_password);
-                users.put(user_name, user);
+                RegularUser user = new RegularUser(Integer.toString(user_id),user_name, user_email, user_password);
+                users.put(Integer.toString(user_id), user);
 
             }
             System.out.println("All regular users are loaded to the system successfully.");
@@ -231,27 +244,27 @@ public class Main {
                 String author = rs.getString("author");
                 String genre= rs.getString("genre");
                 int copies = rs.getInt("copies");
-                Book book = new Book(book_id, title, author, genre, copies);
-                books.put(title, book);
+                Book book = new Book(Integer.toString(book_id), title, author, genre, copies);
+                books.put(Integer.toString(book_id), book);
 
             }
             System.out.println("All books are loaded to the system successfully.");
 
 
-            System.out.println("Loading all borrowed books from the database........");
-            query = "SELECT * FROM `borrowed_books`;";
-            st = conn.prepareStatement(query);
-            rs = st.executeQuery();
-            while(rs.next()){
-                int user_id = rs.getInt("user_id");
-                int book_id = rs.getInt("book_id");
-                User user = users.get(user_id);
-                Book book = books.get(book_id);
-                if(user != null && book != null){
-                    user.getBorrowedBooks().add(book);
-                }
-            }
-            System.out.println("All borrowed books are loaded to the system successfully.");
+            // System.out.println("Loading all borrowed books from the database........");
+            // query = "SELECT * FROM `borrowed_books`;";
+            // st = conn.prepareStatement(query);
+            // rs = st.executeQuery();
+            // while(rs.next()){
+            //     int user_id = rs.getInt("user_id");
+            //     int book_id = rs.getInt("book_id");
+            //     User user = users.get(user_id);
+            //     Book book = books.get(book_id);
+            //     if(user != null && book != null){
+            //         user.getBorrowedBooks().add(book);
+            //     }
+            // }
+            // System.out.println("All borrowed books are loaded to the system successfully.");
 
         } catch (Exception e) {
         e.printStackTrace();
@@ -281,6 +294,8 @@ public class Main {
     }
 
 
-
+// THINGS TO DO:
+// 1- MAKE ID STRING AND MAKE IT THE KEY FOR EVERY MAP 
+// 2- 
 
 }

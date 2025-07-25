@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class User {
-    private int id;
+    private String id;
     private String name;
     private String email;
     private String password;
@@ -24,15 +24,19 @@ public abstract class User {
     }
 
     
-    public List<Book> getBorrowedBooks() {
+   public List<Book> getBorrowedBooks() throws SQLException {
         return borrowedBooks;
     }
+    public void setBorrowedBooks(List<Book> books) {
+        this.borrowedBooks = books;
 
-    protected void setId(int id){
+    }
+
+    protected void setId(String id){
         this.id = id;
     }
     
-    public int getId() {
+    public String getId() {
         
         return id; 
     }

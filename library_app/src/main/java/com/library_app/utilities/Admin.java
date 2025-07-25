@@ -47,7 +47,7 @@ public class Admin extends User{
 
 
     //this constructor is needed for loading admins from the database.
-    public Admin ( int admin_id, String admin_name, String admin_email, String admin_password){
+    public Admin ( String admin_id, String admin_name, String admin_email, String admin_password){
         super(admin_name, admin_email, admin_password);
         super.setId(admin_id);
     }
@@ -58,7 +58,7 @@ public class Admin extends User{
     }
 
     // not used yet 
-    public int search_admin(String name,  String email, String password) throws SQLException {
+    public String search_admin(String name,  String email, String password) throws SQLException {
 
         try{
 
@@ -73,11 +73,11 @@ public class Admin extends User{
             if(rs.next()){
                 int admin_id = rs.getInt("admin_id");
                 System.out.println("Admin with the provided credentials is found in the database.");
-                return admin_id;
+                return Integer.toString(admin_id);
                 
             }
             else{
-                return -1;
+                return null;
             }
         }catch (SQLException e){
             System.out.println("Connection to database failed in search_admin method in Admin\n");
@@ -128,7 +128,7 @@ public class Admin extends User{
                 ResultSet generated_keys = st.getGeneratedKeys();
                 if(generated_keys.next()){
                      int adminId = generated_keys.getInt(1);
-                     admin.setId(adminId);
+                     admin.setId(Integer.toString(adminId));
                 }else{
                     System.out.println("Error while getting generated admin id in add_new_admin method.");
                     conn.rollback();
@@ -139,7 +139,7 @@ public class Admin extends User{
                 conn.commit();
                 conn.setAutoCommit(true);
                 
-                Main.admins.put(admin.getName(), admin);
+                Main.admins.put(admin.getId(), admin);
           
             } catch( SQLException e){
                 System.out.println("Connection to Database failed in add_NewAdmin method in Admin.\n" + e);
@@ -179,7 +179,7 @@ public class Admin extends User{
                 ResultSet generated_keys = st.getGeneratedKeys();
                 if(generated_keys.next()){
                     int book_id = generated_keys.getInt(1);
-                    book.setId(book_id);
+                    book.setId(Integer.toString(book_id));
                 } else{
                     System.out.println("Couldnt get the book_id from the generated keys in add_new_books method.");
                     throw new SQLException();
@@ -189,7 +189,7 @@ public class Admin extends User{
                     conn.commit();
                     conn.setAutoCommit(true);
 
-                    Main.books.put(title, book);
+                    Main.books.put(book.getId(), book);
                     System.out.println("Book added with title: "+book.getTitle() +" and Author: "+book.getAuthor() +" Genre: "+ book.getGenre() + " copies: "+book.getAvailableCopies() + " book_id: "+ book.getId());
               
                 } catch (Exception e){
@@ -223,7 +223,7 @@ public class Admin extends User{
             }
 
                 conn = Database.getConnection();
-                int book_id = book.getId();
+                String book_id = book.getId();
                 String query;
                 PreparedStatement st;
                 type = type.toUpperCase();
@@ -232,7 +232,7 @@ public class Admin extends User{
                     query = "UPDATE books SET  title = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
-                    st.setInt(2, book_id);
+                    st.setString(2, book_id);
                     st.executeUpdate();
                     
                     book.setTitle(data);
@@ -243,7 +243,7 @@ public class Admin extends User{
                     query = "UPDATE books SET  author = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
-                    st.setInt(2, book_id);
+                    st.setString(2, book_id);
                     st.executeUpdate();
                     book.setAuthor(data);
                     System.out.println("Author of the book changed succesfully.");
@@ -253,7 +253,7 @@ public class Admin extends User{
                     query = "UPDATE books SET  genre = ? WHERE book_id =  ?;";
                     st = conn.prepareStatement(query);
                     st.setString(1, data);
-                    st.setInt(2, book_id);
+                    st.setString(2, book_id);
                     st.executeUpdate();
                     book.setGenre(data);
                     System.out.println("Genre of the book changed succesfully.");
@@ -281,11 +281,11 @@ public class Admin extends User{
                 return;
             }
             conn = Database.getConnection();
-            int book_id = book.getId();
+            String book_id = book.getId();
             String query = "UPDATE books SET copies = ? WHERE book_id = ?;";
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, copies);
-            st.setInt(2, book_id);
+            st.setString(2, book_id);
             st.executeUpdate();
             book.setAvailableCopies(copies);
 
@@ -311,10 +311,10 @@ public class Admin extends User{
             conn = Database.getConnection();
             String query = "DELETE FROM `books` WHERE book_id = ?;";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setInt(1, book.getId());
+            st.setString(1, book.getId());
             st.executeUpdate();
 
-            Main.books.remove(book.getTitle());
+            Main.books.remove(book.getId());
             System.out.println("Book with title: "+ book.getTitle() + " and book_id: "+ book.getId() +" is deleted  successfully.");
 
     
@@ -350,7 +350,7 @@ public class Admin extends User{
                 ResultSet generated_keys = st.getGeneratedKeys();
                 if(generated_keys.next()){
                     int user_id = generated_keys.getInt(1);
-                    user.setId(user_id);
+                    user.setId(Integer.toString(user_id));
                 } else{
                     System.out.println("Couldnt get the user_id from the generated keys in registerUsers method.");
                     throw new SQLException();
@@ -359,7 +359,7 @@ public class Admin extends User{
                     conn.commit();
                     conn.setAutoCommit(true);
 
-                    Main.users.put(name, user);
+                    Main.users.put(user.getId(), user);
                     System.out.println("User added with name: "+user.getName() +" and Email: "+user.getEmail() + "user_id: "+user.getId());
               
                 } catch (Exception e){
@@ -390,10 +390,10 @@ public class Admin extends User{
             conn = Database.getConnection();
             String query = "DELETE FROM `users` WHERE user_id = ?;";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setInt(1, user.getId());
+            st.setString(1, user.getId());
             st.executeUpdate();
 
-            Main.users.remove(user.getName());
+            Main.users.remove(user.getId());
             System.out.println("User with id: "+ user.getId() + " and user_name: "+ user.getName() +" is deleted  successfully.");
 
     
@@ -417,7 +417,7 @@ public class Admin extends User{
             ResultSet rs = st.executeQuery();
             if(rs.next()){
                 int admin_id = rs.getInt("admin_id");
-                this.setId(admin_id);
+                this.setId(Integer.toString(admin_id));
             }
         System.out.println("No admin with the following data is present in the database.");
         throw new  SQLException();
