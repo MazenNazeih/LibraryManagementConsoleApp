@@ -12,12 +12,14 @@ public class SearchService <T extends Searchable> {
     }
 
     
-    public List<T> getItems() {
+    public  List<T> getItems() {
         return items;
     }
     
     public T search_by_name(String name){
-
+        if (getItems() == null ){
+            return null;
+        }
         for (T item : getItems()) {
             if ( item.getName().equalsIgnoreCase(name)){
                 return item;
@@ -30,7 +32,9 @@ public class SearchService <T extends Searchable> {
 
 
     public T search_by_id(String id){
-
+        if (getItems() == null){
+            return null;
+        }
         for (T item : getItems()) {
             if ( item.getId().equalsIgnoreCase(id)){
                 return item;

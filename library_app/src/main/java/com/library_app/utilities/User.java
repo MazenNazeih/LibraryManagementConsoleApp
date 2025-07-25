@@ -27,6 +27,7 @@ public abstract class User implements Searchable {
    public List<Book> getBorrowedBooks() throws SQLException {
         return borrowedBooks;
     }
+    
     public void setBorrowedBooks(List<Book> books) {
         this.borrowedBooks = books;
 

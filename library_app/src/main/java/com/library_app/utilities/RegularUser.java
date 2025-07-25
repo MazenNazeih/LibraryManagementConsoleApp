@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.library_app.Main;
+
 public class RegularUser extends User implements Borrowable{
 
     private static Connection conn;
@@ -106,7 +108,9 @@ public class RegularUser extends User implements Borrowable{
             Book temp = new Book();
             temp.setId(bookID);
 
-            if (borrowedBooks.contains(temp)){
+            SearchService<Book> book_SearchService = new SearchService<Book>(borrowedBooks);
+
+            if (book_SearchService.search_by_id(bookID) != null){
 
                 System.out.println("Book is already borrowed. Cannot borrow the same book twice.");
                 return;
@@ -125,16 +129,16 @@ public class RegularUser extends User implements Borrowable{
                     return;
                 }
                 else{
-                    // things to update: copies in book object, books table, borrowed books table, borrowed books list
+                    // things to update: books table, borrowed books table, borrowed books list
                     copies -=1;
-                    // book.setAvailableCopies(copies);
-                    // updateDatabase(book);
-                    // System.out.println("Book with title: "+ book.getTitle() + " and id: "+ book.getId() + " has been borrowed successfully.");
+                    updateDatabase(bookID, copies);
+                    this.update_BorrowedBooks();
+                    System.out.println("Book with id: "+ bookID+ " has been borrowed successfully by user id: "+ this.getId());
                     
                 }
             }
             else{
-                System.out.println("Book passed cannot be found in the database.");
+                System.out.println("Book id passed cannot be found in the database.");
                 return;
             }
 
@@ -146,7 +150,7 @@ public class RegularUser extends User implements Borrowable{
 
     }
 
-    public void  updateDatabase(Book book) throws SQLException{
+    public void  updateDatabase(String  bookId, int copies) throws SQLException{
         try{
             conn = Database.getConnection();
 
@@ -155,18 +159,18 @@ public class RegularUser extends User implements Borrowable{
             // updating the borrowed books table
             String query = "INSERT INTO `borrowed_books` (user_id, book_id) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(query);
-            // st.setInt(1, this.getId());
-            // st.setInt(2, book.getId());
+            st.setString(1, this.getId());
+            st.setString(2, bookId);
             st.executeUpdate();
 
               // updating the books table.
             query = "UPDATE `books` SET copies = ? WHERE book_id = ?;";
             st = conn.prepareStatement(query);
-            // st.setInt(1, book.getAvailableCopies());
-            // st.setInt(2, book.getId());
-            // st.executeUpdate();
+            st.setInt(1, copies);
+            st.setString(2, bookId);
+            st.executeUpdate();
 
-            System.out.println("Database updated to apply borrowing of book_id: "+book.getId() + " by user_id: "+ this.getId());
+            System.out.println("Database updated to apply borrowing of book_id: "+bookId+ " by user_id: "+ this.getId());
 
         } catch (SQLException e){
             System.out.println("Error in updating the database tables for borrowing a book.");
