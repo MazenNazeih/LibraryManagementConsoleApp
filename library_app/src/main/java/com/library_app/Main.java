@@ -158,6 +158,11 @@ public class Main {
         // }
 
 
+        // ..........................Testing borrowBook ...........................
+        RegularUser user1 = (RegularUser) users.get("Mazen Nazeih");
+        Book book_to_borrow = books.get("Test new book 2");
+        user1.borrowBook(book_to_borrow);
+        System.out.println("User: "+ user1.getName() + " borrowed book with title: "+ book_to_borrow.getTitle() + " and id: "+ book_to_borrow.getId() + " and available copies: "+ book_to_borrow.getAvailableCopies());
         print_all_Maps();
 
 
@@ -231,6 +236,22 @@ public class Main {
 
             }
             System.out.println("All books are loaded to the system successfully.");
+
+
+            System.out.println("Loading all borrowed books from the database........");
+            query = "SELECT * FROM `borrowed_books`;";
+            st = conn.prepareStatement(query);
+            rs = st.executeQuery();
+            while(rs.next()){
+                int user_id = rs.getInt("user_id");
+                int book_id = rs.getInt("book_id");
+                User user = users.get(user_id);
+                Book book = books.get(book_id);
+                if(user != null && book != null){
+                    user.getBorrowedBooks().add(book);
+                }
+            }
+            System.out.println("All borrowed books are loaded to the system successfully.");
 
         } catch (Exception e) {
         e.printStackTrace();
