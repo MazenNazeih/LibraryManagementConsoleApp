@@ -79,19 +79,19 @@ public class Main {
 
         //..........................Testing add new book ...........................
 
-        Book existing_book = books.get("programming");
-        List<Book> new_books = new ArrayList<>();
+        // Book existing_book = books.get("programming");
+        // List<Book> new_books = new ArrayList<>();
         
-        Book newbook1 = new Book("Test new book7", "test author 7", "test genre 7", 5);
-        Book newbook2 = new Book("Test new book8", "test author 8", "test genre 8", 3);
+        // Book newbook1 = new Book("Test new book7", "test author 7", "test genre 7", 5);
+        // Book newbook2 = new Book("Test new book8", "test author 8", "test genre 8", 3);
         
-        new_books.add(newbook1);
-        new_books.add(existing_book);
-        new_books.add(newbook2);
-        admin1.add_new_Books(new_books);
+        // new_books.add(newbook1);
+        // new_books.add(existing_book);
+        // new_books.add(newbook2);
+        // admin1.add_new_Books(new_books);
 
-        System.out.println("book1 id: "+ newbook1.getId());
-        System.out.println("book2 id: "+ newbook2.getId());
+        // System.out.println("book1 id: "+ newbook1.getId());
+        // System.out.println("book2 id: "+ newbook2.getId());
 
 
         
@@ -103,21 +103,21 @@ public class Main {
         // admin1.editBook(existing_book, "title", "test1");
 
         // // testing changing title
-        // Book existing_book2 = books.get("Test new book");
-        // admin1.editBook(existing_book2, "title", "Test new book 1");
+        // Book existing_book2 = books.get("Test new book 1");
+        // admin1.editBook(existing_book2, "title", "Test new book1");
         
         // //testing changing genre
         // Book existing_book3 = books.get("A Brief History of Time");
-        // admin1.editBook(existing_book3, "genre", "History");
+        // admin1.editBook(existing_book3, "genre", "Science");
         
 
         // // testing changing author
         // Book existing_book4 = books.get("Effective Java");
-        // admin1.editBook(existing_book4, "author", "nick");
+        // admin1.editBook(existing_book4, "author", "rickford");
 
         // //testing changing copies 
         // Book existing_book5 = books.get("programming");
-        // admin1.editBook(existing_book5, 10);
+        // admin1.editBook(existing_book5, 5);
 
 
       //..........................Testing delete old book ...........................
