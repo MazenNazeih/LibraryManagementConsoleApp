@@ -122,7 +122,7 @@ public class Main {
 
       //..........................Testing delete old book ...........................
 
-    //   Book existing_book = books.get("To Kill a Mockingbird");
+    //   Book existing_book = books.get("test1");
     //   Book deleted_book = admin1.deleteBook(existing_book);
     //   if (deleted_book !=null){
 
@@ -131,10 +131,10 @@ public class Main {
     //         System.out.println("book deleted is null.");
     //     }
         
-        print_all_Maps();
+    //     print_all_Maps();
 
 
-        System.out.println("Hello world!");
+    //     System.out.println("Hello world!");
 
 
 
