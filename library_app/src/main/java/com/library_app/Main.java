@@ -64,30 +64,35 @@ public class Main {
         Admin admin1 = admins.get("mazen1");
 
         // ..........................Testing add new admin ...........................
-          Admin new_admin = new Admin("test7 new_admin", "test7@gmail.com", "test1234");
-        try {
-            admin1.add_new_Admin(new_admin);
-            System.out.println("New admin added sucesfully.");
-            System.out.println("admin details added: ");
+        //   Admin new_admin = new Admin("test7 new_admin", "test7@gmail.com", "test1234");
+        // try {
+        //     admin1.add_new_Admin(new_admin);
+        //     System.out.println("New admin added sucesfully.");
+        //     System.out.println("admin details added: ");
             
-            System.out.println("admin id = "+ new_admin.getId() + " admin_name = "+ new_admin.getName() + " admin_email = "+ new_admin.getEmail());
+        //     System.out.println("admin id = "+ new_admin.getId() + " admin_name = "+ new_admin.getName() + " admin_email = "+ new_admin.getEmail());
             
-        } catch (Exception e) {
-             e.printStackTrace();
-            System.out.println("Failed adding new admin.");
-        }
+        // } catch (Exception e) {
+        //      e.printStackTrace();
+        //     System.out.println("Failed adding new admin.");
+        // }
 
         //..........................Testing add new book ...........................
 
-        // Book existing_book = books.get("programming");
-        // List<Book> new_books = new ArrayList<>();
+        Book existing_book = books.get("programming");
+        List<Book> new_books = new ArrayList<>();
         
-        // Book newbook1 = new Book("Test new book3", "test author 3", "test genre 3", 5);
-        // Book newbook2 = new Book("Test new book4", "test author 4", "test genre 4", 3);
-        // new_books.add(existing_book);
-        // new_books.add(newbook1);
-        // new_books.add(newbook2);
-        // admin1.add_new_Books(new_books);
+        Book newbook1 = new Book("Test new book7", "test author 7", "test genre 7", 5);
+        Book newbook2 = new Book("Test new book8", "test author 8", "test genre 8", 3);
+        
+        new_books.add(newbook1);
+        new_books.add(existing_book);
+        new_books.add(newbook2);
+        admin1.add_new_Books(new_books);
+
+        System.out.println("book1 id: "+ newbook1.getId());
+        System.out.println("book2 id: "+ newbook2.getId());
+
 
         
         

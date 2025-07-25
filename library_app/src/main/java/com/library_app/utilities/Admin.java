@@ -190,7 +190,7 @@ public class Admin extends User{
                     conn.setAutoCommit(true);
 
                     Main.books.put(title, book);
-                    System.out.println("Book added with title: "+title +" and Author: "+author +" Genre: "+ genre + " copies: "+copies);
+                    System.out.println("Book added with title: "+book.getTitle() +" and Author: "+book.getAuthor() +" Genre: "+ book.getGenre() + " copies: "+book.getAvailableCopies() + " book_id: "+ book.getId());
               
                 } catch (Exception e){
                     System.out.println("Error while adding book: "+ title + " to the database. "+ e);
