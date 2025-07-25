@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.library_app.Main;
+import java.sql.Statement;
 
 
 public class Admin extends User{
@@ -117,56 +118,47 @@ public class Admin extends User{
                 
                 conn = Database.getConnection();
                 String query = "INSERT INTO admins(admin_name, admin_email, admin_password) VALUES (?,?,?);";
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 st.setString(1, name);
                 st.setString(2, email);
                 st.setString(3, password);
+               
                 conn.setAutoCommit(false);
                 st.executeUpdate();
-                
-              
-                try {
-                    // int id = getLastAdminId();
-                    // admin.setId(id);
-                    admin.updateId();
-                    conn.commit();
-                    conn.setAutoCommit(true);
-                
-                Main.admins.put(admin.getName(), admin);
-                
-                } catch (SQLException e) {
-                    System.out.println("Error while updating admin id from database.");
+                ResultSet generated_keys = st.getGeneratedKeys();
+                if(generated_keys.next()){
+                     int adminId = generated_keys.getInt(1);
+                     admin.setId(adminId);
+                }else{
+                    System.out.println("Error while getting generated admin id in add_new_admin method.");
                     conn.rollback();
                     conn.commit();
                     conn.setAutoCommit(true);
-                    throw e;
-                    
+                    throw new SQLException() ;
                 }
+                conn.commit();
+                conn.setAutoCommit(true);
                 
-              
-                
+                Main.admins.put(admin.getName(), admin);
           
             } catch( SQLException e){
                 System.out.println("Connection to Database failed in add_NewAdmin method in Admin.\n" + e);
-                conn.commit();
-                conn.setAutoCommit(true);
                 throw e;
                 
             }
             
       
-
-       
     }
 
 
     public void add_new_Books(List<Book> books){
-        try{
-
-            if (books.isEmpty() || books == null){
+        
+        if (books.isEmpty() || books == null){
                 System.out.println("List of books passed to add_new_Books method is empty or null.");
                 return;
             }
+
+        try{
             conn = Database.getConnection();
             for (Book book : books) {
                 String title = book.getTitle();
@@ -176,20 +168,29 @@ public class Admin extends User{
 
                 String query = "INSERT INTO books (title, author, genre, copies) VALUES (?,?,?,?);";
                 conn.setAutoCommit(false);
+
                 try { // purpose of this try catch is to allow insertion of other books even if error occured with one of the books.
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 st.setString(1,title);
                 st.setString(2,author);
                 st.setString(3,genre);
                 st.setInt(4, copies);
                 st.executeUpdate(); // can throw error
-                int id =  book.updateId(); // can throw error
-                    book.setId(id);
-                    System.out.println("Book added with title: "+title +" and Author: "+author +" Genre: "+ genre + " copies: "+copies);
+                ResultSet generated_keys = st.getGeneratedKeys();
+                if(generated_keys.next()){
+                    int book_id = generated_keys.getInt(1);
+                    book.setId(book_id);
+                } else{
+                    System.out.println("Couldnt get the book_id from the generated keys in add_new_books method.");
+                    throw new SQLException();
+                }
+                // book.updateId(); // can throw error
+                    
                     conn.commit();
                     conn.setAutoCommit(true);
 
                     Main.books.put(title, book);
+                    System.out.println("Book added with title: "+title +" and Author: "+author +" Genre: "+ genre + " copies: "+copies);
               
                 } catch (Exception e){
                     System.out.println("Error while adding book: "+ title + " to the database. "+ e);
@@ -325,33 +326,35 @@ public class Admin extends User{
     }
 
     public void registerUsers(List<User> users){
-        
-         try{
-
-            if (users.isEmpty() || users == null){
+        if (users.isEmpty() || users == null){
                 System.out.println("List of users passed to registerUsers method is empty or null.");
                 return;
             }
+
+         try{
+
             conn = Database.getConnection();
             for (User user : users) {
                 String name = user.getName();
                 String email =  user.getEmail();
                 String password = user.getPassword();
-                String query = "INSERT INTO users (user_name, user_email, user_password) VALUES (?,?,?);";
+                String query = "INSERT INTO `users` (user_name, user_email, user_password) VALUES (?,?,?);";
                 conn.setAutoCommit(false);
-                try { // purpose of this try catch is to allow insertion of other books even if error occured with one of the books.
+
+                try { // purpose of this try catch is to allow insertion of other users even if error occured with one of the users.
                 PreparedStatement st = conn.prepareStatement(query);
                 st.setString(1,name);
                 st.setString(2,email);
                 st.setString(3,password);
                 st.executeUpdate(); // can throw error
-                int id =  user.updateId(); // can throw error
-                    user.setId(id);
-                    System.out.println("User added with name: "+name +" and Email: "+email);
+
+                user.updateId(); // can throw error
+                    
                     conn.commit();
                     conn.setAutoCommit(true);
 
                     Main.users.put(name, user);
+                    System.out.println("User added with name: "+name +" and Email: "+email);
               
                 } catch (Exception e){
                     System.out.println("Error while adding user: "+ name + " to the database. "+ e);
@@ -360,21 +363,16 @@ public class Admin extends User{
                     conn.setAutoCommit(true);
                 }
 
-               
-              
-               
-
-                
             }
             conn.setAutoCommit(true); // just to make sure
         } catch (SQLException e){
             e.printStackTrace();
-            System.out.println("Connection to database failed in Admin addbooks method.\n");
+            System.out.println("Connection to database failed in Admin registerUsers method.\n");
         }
       
     }
 
-   public int updateId() throws SQLException {
+   public void  updateId() throws SQLException {
 
             conn = Database.getConnection();
             String query = "SELECT * FROM  `admins` WHERE admin_name = ? AND admin_email = ? AND admin_password = ?;";
@@ -386,7 +384,6 @@ public class Admin extends User{
             if(rs.next()){
                 int admin_id = rs.getInt("admin_id");
                 this.setId(admin_id);
-                return admin_id;
             }
         System.out.println("No admin with the following data is present in the database.");
         throw new  SQLException();

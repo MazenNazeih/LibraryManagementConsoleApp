@@ -42,7 +42,7 @@ public class Book {
 
 
 
-    protected int updateId()  throws SQLException {
+    protected void updateId()  throws SQLException {
 
             conn = Database.getConnection();
             String query = "SELECT * FROM books WHERE title = ? AND author = ? AND genre = ?;";
@@ -53,8 +53,8 @@ public class Book {
             ResultSet rs = st.executeQuery();
             if(rs.next()){
                 int book_id = rs.getInt("book_id");
-                this.id = book_id;
-                return book_id;
+                this.setId(book_id);
+
             }
         System.out.println("No book with the following data is present in the database.");
         throw new  SQLException();

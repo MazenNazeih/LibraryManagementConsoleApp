@@ -19,7 +19,7 @@ public class RegularUser extends User implements Borrowable{
 
     // }
 
-    public int updateId() throws SQLException {
+    public void updateId() throws SQLException {
 
             conn = Database.getConnection();
             String query = "SELECT * FROM  `users` WHERE user_name = ? AND user_email = ? AND user_password = ?;";
@@ -31,7 +31,7 @@ public class RegularUser extends User implements Borrowable{
             if(rs.next()){
                 int user_id = rs.getInt("user_id");
                 this.setId(user_id);
-                return user_id;
+                
             }
         System.out.println("No user with the following data is present in the database.");
         throw new  SQLException();

@@ -52,6 +52,7 @@ public abstract class User {
         return this.password;
     }
 
+     public abstract void  updateId() throws SQLException;
 
 
     
