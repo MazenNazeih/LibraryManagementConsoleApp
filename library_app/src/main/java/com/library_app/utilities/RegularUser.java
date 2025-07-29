@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 import com.library_app.Main;
 
@@ -29,6 +32,18 @@ public class RegularUser extends User implements Borrowable{
     public void viewBookCatalog(){
         try{
             List<Book> books = this.getBorrowedBooks();
+            Comparator<Book> com = new Comparator<Book>() {
+                public int compare(Book book1, Book book2){
+                    String book1name = book1.getName();
+                    String book2name = book2.getName();
+
+                    if(book1name.compareTo(book2name) > 0)
+                        return 1; // swap
+                    else
+                        return -1; // dont swap.+
+                }
+            };
+            Collections.sort(books, com);
             System.out.println("\nView Borrowed Books Catalog for user_id: "+this.getId() + " :");
             for (Book book : books) {
                 System.out.println("Book id:  "+book.getId());
@@ -258,6 +273,77 @@ public class RegularUser extends User implements Borrowable{
             System.out.println("Error in returnBook method in regular user.");
             e.printStackTrace();
        
+        }
+    }
+
+
+
+    @Override
+    public boolean login() {
+         try {
+            this.updateId();
+        } catch (Exception e) {
+
+        System.out.println("Failed to login with the following credentials. Incorrect username, email, or password.");
+        return false;
+    }
+    return true;
+
+    }
+
+    @Override
+    public boolean sign_up() {
+        List<User> users = new ArrayList<>();
+        users.add(this);
+        Admin admin = new Admin();
+        boolean result = admin.registerUsers(users);
+        return result;
+    }
+
+    @Override
+    public void show_menu() {
+        System.out.println("View Book Catalog: 1");
+        System.out.println("Borrow book: 2");
+        System.out.println("Return Book: 3");
+        System.out.println("Logout: 4");
+
+        Scanner scan = new Scanner(System.in);
+        int input = scan.nextInt();
+        scan.nextLine();
+        String book_id;
+
+        switch(input) {
+            case 1:
+                this.viewBookCatalog();
+                this.show_menu();
+
+                break;
+
+            case 2:
+                System.out.println("Please enter book id you want to borrow");
+                book_id = scan.nextLine();
+                this.borrowBook(book_id);
+                this.show_menu();
+
+                break;
+
+            case 3:
+                System.out.println("Please enter book id you want to return.");
+                book_id = scan.nextLine();
+                this.returnBook(book_id);
+                this.show_menu();
+
+                break;
+
+            case 4:
+                System.out.println("Logging out of the system ....");
+                break;
+
+
+            default:
+                System.out.println("Invalid option. choose again.");
+                this.show_menu();
+
         }
     }
 

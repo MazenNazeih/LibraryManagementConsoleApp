@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -179,14 +180,14 @@ public class Main {
         //     System.out.println("ERROR WHILE BORROWING A BOOK ");
         // }
        
-        // ..........................Testing borrowBook ...........................
+        // ..........................Testing return book ...........................
         // RegularUser user1 = (RegularUser) users.get("1");
         // user1.returnBook("40"); //to return fr
         // user1.returnBook("3"); // to return an unborrowed book
         // user1.returnBook("50"); // to return non existing book
         // user1.returnBook(""); // to return a null book id
 
-          // ..........................Testing borrowBook ...........................
+          // ..........................Testing viewBook catalog ...........................
         // RegularUser user1 = (RegularUser) users.get("1");
         // user1.viewBookCatalog();
 
@@ -245,7 +246,23 @@ public class Main {
 
 
         System.out.println("Hello world!");
+      
 
+       
+
+        
+      
+        User user;
+        do{
+            user = show_first_options();
+        }while(user == null);
+      
+        user.showMenu();
+     
+
+   
+
+        System.out.println("");
 
 
 
@@ -261,6 +278,7 @@ public class Main {
        
         
     }
+
 
 
 
@@ -379,6 +397,82 @@ public class Main {
         System.out.println("\n");
     }
 
+    public static User show_first_options(){
+          Scanner scan = new Scanner(System.in);
+
+          System.out.println("Enter your username: ");
+        String username = scan.nextLine();
+        System.out.println("Enter your email: ");
+        String email = scan.nextLine();
+        System.out.println("Enter your password: ");
+        String password = scan.nextLine();
+
+        User user = null;
+        while(user == null){
+
+            System.out.println("Admin: 1\nUser: 2");
+            int user_option = scan.nextInt();
+            scan.nextLine();
+
+            user = switch(user_option){
+
+            case 1-> new Admin(username, email, password);
+               
+            case 2-> new RegularUser(username, email, password);
+          
+            default-> null;
+
+
+        };
+    
+        }
+
+      
+        boolean result = false;
+        while(result ==false){
+             System.out.println("Sign in: 1\nLogin: 2");
+                int login_option = scan.nextInt();
+                scan.nextLine();
+
+            switch(login_option){
+               
+               case 1: 
+                result = user.sign_up();
+                if(result ==false){
+                    System.out.println("Signup with the following credentials failed.");
+                    return null;
+                }
+                break;
+   
+               case 2:
+                result = user.login();
+                 if(result ==false){
+                    System.out.println("Login with the following credentials failed.");
+                    return null;
+                }
+                break;
+                
+               
+               default:
+                result = false;
+                System.out.println("Invalid option.");
+            
+
+                   
+           }
+
+        }
+        return user;
+       
+        
+
+    }
+
+    public static int showMenu(){
+        System.out.println("Menu (Choose one of the following actions):\n");
+        System.out.println();
+
+    }
 // THINGS TO DO:
 // 1- MAKE ID STRING AND MAKE IT THE KEY FOR EVERY MAP 
 // 2- 

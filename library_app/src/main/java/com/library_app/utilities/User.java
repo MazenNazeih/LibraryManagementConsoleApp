@@ -22,6 +22,7 @@ public abstract class User implements Searchable {
         this.borrowedBooks = new ArrayList<Book>();
         
     }
+    public User(){}
 
     
    public List<Book> getBorrowedBooks() throws SQLException {
@@ -57,7 +58,15 @@ public abstract class User implements Searchable {
         return this.password;
     }
 
-     public abstract void  updateId() throws SQLException;
+     public  void  updateId() throws SQLException{
+
+     }
+
+     public abstract boolean sign_up();
+ 
+     public abstract  boolean login();
+
+     public abstract boolean show_menu();
 
 
     
