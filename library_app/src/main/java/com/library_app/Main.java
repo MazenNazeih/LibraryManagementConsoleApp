@@ -59,12 +59,10 @@ public class Main {
 
         
 
-        loadDatabase();
-        print_all_Maps();
-
+      
       
         // need admin to add a new admin.
-        Admin admin1 = admins.get("1");
+        // Admin admin1 = admins.get("1");
 
         // ..........................Testing add new admin ...........................
         //   Admin new_admin = new Admin("test8 new_admin", "test8_duplicate@gmail.com", "test1234");
@@ -245,39 +243,69 @@ public class Main {
         // print_all_genres();
 
 
-        System.out.println("Hello world!");
+       
       
 
        
 
         
-      
+        loadDatabase();
+        print_all_Maps();
+
         User user;
-        do{
-            user = show_first_options();
-        }while(user == null);
+       
       
-        user.showMenu();
-     
+        Scanner scan = new Scanner(System.in);
+      while(true){
+              
+              do {
+                    System.out.println("Exit ? (press 10): ");
+                    System.out.println("Press any key to continue: ");
+                    if (scan.hasNextInt()){
+                    int input = scan.nextInt();
+                    scan.nextLine();
+                    if (input == 10){
+                        System.out.println("Exiting .....");
+                          try {
+                        Database.closeConnection();
+                        System.out.println("Database Connection closed succesfully.");
+                        AbandonedConnectionCleanupThread.checkedShutdown();
+                        } catch (Exception e) {
+                        e.printStackTrace();
+                         System.out.println("Error closing the database connection in Main");
+                        }
+                        return;
+                    }
+                }
+                    scan.nextLine();
+                    
+                  user = show_first_options();
+           
+            }while (user == null);
+              user.show_menu();
+  
 
-   
+      
+        }
 
-        System.out.println("");
+}
+
 
 
 
         // ------------------closing all connection and threads --------------------------
-        try {
-            Database.closeConnection();
-            System.out.println("Database Connection closed succesfully.");
-            AbandonedConnectionCleanupThread.checkedShutdown();
-        } catch (Exception e) {
-        e.printStackTrace();
-        System.out.println("Error closing the database connection in Main");
-        }
+    //     try {
+    //         Database.closeConnection();
+    //         System.out.println("Database Connection closed succesfully.");
+    //         AbandonedConnectionCleanupThread.checkedShutdown();
+    //     } catch (Exception e) {
+    //     e.printStackTrace();
+    //     System.out.println("Error closing the database connection in Main");
+    //     }
        
         
-    }
+    // }
+
 
 
 
@@ -399,7 +427,7 @@ public class Main {
 
     public static User show_first_options(){
           Scanner scan = new Scanner(System.in);
-
+        System.out.println("Hello....\n");
           System.out.println("Enter your username: ");
         String username = scan.nextLine();
         System.out.println("Enter your email: ");
@@ -411,55 +439,91 @@ public class Main {
         while(user == null){
 
             System.out.println("Admin: 1\nUser: 2");
-            int user_option = scan.nextInt();
-            scan.nextLine();
+            String user_option = scan.nextLine();
+     
+            try {
+                int  user_option_num = Integer.parseInt(user_option);
+                // System.out.println("user option parsed correctly to integer: "+ user_option_num);
+                
+                  user = switch(user_option_num){
 
-            user = switch(user_option){
+            case 1:
+             yield new Admin(username, email, password);
 
-            case 1-> new Admin(username, email, password);
                
-            case 2-> new RegularUser(username, email, password);
+            case 2:
+            yield new RegularUser(username, email, password);
+      
           
-            default-> null;
+            default: 
+            System.out.println("Invalid option. Try again..");
+            yield null;
 
 
         };
     
+            } catch (Exception e) {
+                System.out.println("Invalid option. Try again..");
+                user =null;
+            }
+
+          
         }
 
       
         boolean result = false;
         while(result ==false){
-             System.out.println("Sign in: 1\nLogin: 2");
-                int login_option = scan.nextInt();
-                scan.nextLine();
 
-            switch(login_option){
-               
-               case 1: 
+
+             System.out.println("Sign up: 1\nLogin: 2");
+                String login_option = scan.nextLine();
+                try {
+                int  login_option_num = Integer.parseInt(login_option);
+                // System.out.println("login option parsed correctly to integer: "+ login_option_num);
+                
+             switch(login_option_num){
+
+            case 1: 
                 result = user.sign_up();
                 if(result ==false){
                     System.out.println("Signup with the following credentials failed.");
                     return null;
                 }
+                System.out.println("Signup succesfull.\nWelcome "+user.getName()+ " !\n");
                 break;
-   
-               case 2:
+                
+
+               
+           case 2:
+                // System.out.println("in case 2 ");
                 result = user.login();
                  if(result ==false){
                     System.out.println("Login with the following credentials failed.");
                     return null;
                 }
+                System.out.println("Login succesfull.\nWelcome back "+user.getName()+ " !\n");
                 break;
+              
                 
                
-               default:
+          
+             default:
+                // System.out.println("in default why idk ? ");
                 result = false;
-                System.out.println("Invalid option.");
+                System.out.println("Invalid option. Try again..");
+                break;
+      
             
 
-                   
-           }
+        }
+    
+            } catch (Exception e) {
+                System.out.println("Invalid option. Try again..");
+                result = false;
+             
+            }
+
+           
 
         }
         return user;
@@ -468,11 +532,7 @@ public class Main {
 
     }
 
-    public static int showMenu(){
-        System.out.println("Menu (Choose one of the following actions):\n");
-        System.out.println();
 
-    }
 // THINGS TO DO:
 // 1- MAKE ID STRING AND MAKE IT THE KEY FOR EVERY MAP 
 // 2- 

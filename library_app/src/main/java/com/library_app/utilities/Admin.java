@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.library_app.Main;
 import java.sql.Statement;
@@ -388,7 +389,7 @@ public class Admin extends User{
             }
             conn.setAutoCommit(true); // just to make sure
         } catch (SQLException e){
-            e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("Connection to database failed in Admin registerUsers method.\n");
             return false;
             
@@ -438,8 +439,11 @@ public class Admin extends User{
                 int admin_id = rs.getInt("admin_id");
                 this.setId(Integer.toString(admin_id));
             }
-        System.out.println("No admin with the following data is present in the database.");
-        throw new  SQLException();
+            else{
+
+                System.out.println("No admin with the following data is present in the database.");
+                throw new  SQLException();
+            }
     }
 
    @Override
@@ -464,10 +468,167 @@ public class Admin extends User{
    }
 
    @Override
-   public boolean show_menu() {
-   
-    throw new UnsupportedOperationException("Unimplemented method 'show_menu'");
-   }
+   public void show_menu() {
+    while (true){
+    System.out.println();
+     System.out.println("-------------------------------------------------------------------------");
+    System.out.println("Menu:\n");
+    System.out.println("Add new book: 1");
+    System.out.println( "Edit an existing book: 2");
+    System.out.println("Delete book: 3");
+    System.out.println("Register new regular user: 4");
+    System.out.println("Logout: 5");
+
+
+    Scanner scan = new Scanner(System.in);
+    String input = scan.nextLine();
+    int input_num =10;
+    try{
+         input_num = Integer.parseInt(input) ;
+        //  System.out.println("INPUT PARSED TO INTEGER"+ input_num);
+    }catch (NumberFormatException e){
+           System.out.println("Invalid option. choose again.");
+            continue;
+    }
+
+    switch (input_num ) {
+        case 1:
+        int num_books;
+        do{
+            System.out.println("How many books you want to add: ");
+             while (!scan.hasNextInt()) {
+                        System.out.println("Please enter a valid number:");
+                        scan.next(); // discard invalid input
+                    }
+            num_books = scan.nextInt();
+            scan.nextLine();
+
+        }while(num_books<=0);
+            List<Book> bookstoadd = new ArrayList<>();
+            int i = 1;
+            while(num_books >0){
+                System.out.println("Enter details for book: "+i);
+                System.out.println("Title: ");
+                String title = scan.nextLine();
+                System.out.println("Author name: ");
+                String author = scan.nextLine();
+                System.out.println("Genre: ");
+                String genre = scan.nextLine();
+                System.out.println("Number of available copies: ");
+                while (!scan.hasNextInt()) {
+                        System.out.println("Please enter a valid number:");
+                        scan.next(); // discard invalid input
+                    }
+                int copies = scan.nextInt();
+                scan.nextLine();
+                Book book = new Book(title, author, genre, copies);
+                bookstoadd.add(book);
+                num_books -=1;
+                i++;
+
+            }
+            this.add_new_Books(bookstoadd);
+            
+            continue;
+
+        case 2:
+            System.out.println("Enter book id you want to edit: ");
+            String book_id = scan.nextLine();
+            Book book = Main.books.get(book_id);
+            while (book == null){
+                System.out.println("\nInvalid book id. try again later ...");
+                 System.out.println("Enter book id you want to edit: ");
+                 book_id = scan.nextLine();
+                 book = Main.books.get(book_id);
+                
+            }
+            System.out.println("What do you want to edit? Enter either: \"title\" \"author\" \"genre\" \"copies\" ");
+            String option = scan.nextLine();
+          
+            while(!option.equalsIgnoreCase("title") && !option.equalsIgnoreCase("author") && !option.equalsIgnoreCase("genre") &&  !option.equalsIgnoreCase("copies")){
+                System.out.println("Invalid entry. Try again.....");
+                System.out.println("What do you want to edit? Enter either: \"title\" \"author\" \"genre\" \"copies\" ");
+                 option = scan.nextLine();
+            }
+            option = option.toLowerCase();
+            switch(option){
+                case "title", "author", "genre":
+                    System.out.println("Enter the new data: "); 
+                    String data  = scan.nextLine();
+                    this.editBook(book, option, data);
+                    continue;
+                case "copies":
+                    System.out.println("Enter the new number of copies: ");
+                      while (!scan.hasNextInt()) {
+                        System.out.println("Please enter a valid number:");
+                        scan.next(); // discard invalid input
+                    }
+                    int copies = scan.nextInt();
+                    this.editBook(book, copies);
+                    continue;
+
+            
+
+            }
+
+            case 3: 
+                System.out.println("Enter book id you want to delete: ");
+                String bk_id = scan.nextLine();
+                Book book_delete = Main.books.get(bk_id);
+                while (book_delete == null){
+                System.out.println("\nInvalid book id. try again...");
+                 System.out.println("Enter book id you want to delete: ");
+                 bk_id = scan.nextLine();
+                 book_delete = Main.books.get(bk_id);
+                
+                }
+                this.deleteBook(book_delete);
+                continue;
+
+
+            case 4:     
+            
+                int num_users;
+                do{
+                 System.out.println("How many regular users you want to register: ");
+                while (!scan.hasNextInt()) {
+                        System.out.println("Please enter a valid number:");
+                        scan.next(); // discard invalid input
+                    }
+                num_users = scan.nextInt();
+                scan.nextLine();
+
+                }while(num_users<=0);
+                List<User> users_to_add = new ArrayList<>();
+                for ( i =1; num_users >0; i++){
+                System.out.println("Enter username for new regular user: "+ i);
+                String name = scan.nextLine();
+                System.out.println("Enter email for new regular user: "+ i);
+                String email = scan.nextLine();
+                System.out.println("Enter password for new regular user: "+ i);
+                String pass = scan.nextLine();
+                RegularUser user = new RegularUser(name, email, pass);
+                users_to_add.add(user);
+                num_users--;
+
+                }
+                this.registerUsers(users_to_add);
+                continue;
+              
+                
+
+        case 5:
+                System.out.println("Logging out of the system ....");
+                return ; 
+
+
+        default:
+                System.out.println("Invalid option. choose again.");
+               continue;
+    }
+}
+  
+}
 
 
 }

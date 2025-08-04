@@ -66,7 +66,7 @@ public abstract class User implements Searchable {
  
      public abstract  boolean login();
 
-     public abstract boolean show_menu();
+     public abstract void show_menu();
 
 
     

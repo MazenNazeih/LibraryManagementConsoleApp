@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,9 +31,11 @@ public class RegularUser extends User implements Borrowable{
     }
 
     public void viewBookCatalog(){
-        try{
-            List<Book> books = this.getBorrowedBooks();
-            Comparator<Book> com = new Comparator<Book>() {
+        
+            Collection<Book> books = Main.books.values();
+            ArrayList<Book> book_array = new ArrayList<>(books);    
+
+            Comparator<Book> com = new Comparator<Book>() { 
                 public int compare(Book book1, Book book2){
                     String book1name = book1.getName();
                     String book2name = book2.getName();
@@ -43,9 +46,9 @@ public class RegularUser extends User implements Borrowable{
                         return -1; // dont swap.+
                 }
             };
-            Collections.sort(books, com);
+            Collections.sort(book_array, com);
             System.out.println("\nView Borrowed Books Catalog for user_id: "+this.getId() + " :");
-            for (Book book : books) {
+            for (Book book : book_array) {
                 System.out.println("Book id:  "+book.getId());
                 System.out.println("Book name: "+ book.getName());
                 System.out.println("Book available copies: "+ book.getAvailableCopies());
@@ -53,11 +56,7 @@ public class RegularUser extends User implements Borrowable{
             }
            
 
-        }catch (SQLException e){
-            System.out.println("Error while fetching the updated borrowed books list from the database. Error in viewBookCatalog method.");
-     
-        }
-
+       
     }
 
     public void updateId() throws SQLException {
@@ -73,9 +72,11 @@ public class RegularUser extends User implements Borrowable{
                 int user_id = rs.getInt("user_id");
                 this.setId(Integer.toString(user_id));
                 
+            }else{
+
+                System.out.println("No user with the following data is present in the database.");
+                throw new  SQLException();
             }
-        System.out.println("No user with the following data is present in the database.");
-        throw new  SQLException();
     }
 
    
@@ -302,20 +303,32 @@ public class RegularUser extends User implements Borrowable{
 
     @Override
     public void show_menu() {
+
+        while(true){
+        System.out.println();
+        System.out.println("-------------------------------------------------------------------------");
+        System.out.println("Menu:\n");
         System.out.println("View Book Catalog: 1");
         System.out.println("Borrow book: 2");
         System.out.println("Return Book: 3");
         System.out.println("Logout: 4");
 
         Scanner scan = new Scanner(System.in);
-        int input = scan.nextInt();
-        scan.nextLine();
+        String input = scan.nextLine();
+        int input_num =10;
+          try{
+         input_num = Integer.parseInt(input) ;
+        //  System.out.println("INPUT PARSED TO INTEGER"+ input_num);
+         }catch (NumberFormatException e){
+           System.out.println("Invalid option. choose again.");
+            continue;
+    }
+
         String book_id;
 
-        switch(input) {
+        switch(input_num) {
             case 1:
                 this.viewBookCatalog();
-                this.show_menu();
 
                 break;
 
@@ -323,7 +336,6 @@ public class RegularUser extends User implements Borrowable{
                 System.out.println("Please enter book id you want to borrow");
                 book_id = scan.nextLine();
                 this.borrowBook(book_id);
-                this.show_menu();
 
                 break;
 
@@ -331,20 +343,21 @@ public class RegularUser extends User implements Borrowable{
                 System.out.println("Please enter book id you want to return.");
                 book_id = scan.nextLine();
                 this.returnBook(book_id);
-                this.show_menu();
 
                 break;
 
             case 4:
                 System.out.println("Logging out of the system ....");
-                break;
+
+                return;
 
 
             default:
                 System.out.println("Invalid option. choose again.");
-                this.show_menu();
-
+                continue;
         }
+    }
+
     }
 
    
